@@ -18,7 +18,7 @@ def get_connection():
     row_factory を設定することで、行データを辞書のように扱える。
     data/ フォルダが存在しない場合は自動で作成する。
     """
-    DB_PATH.parent.mkdir(exist_ok=True)   # data/ フォルダがなければ作る
+    DB_PATH.parent.mkdir(exist_ok=True)   # data/ フォルダを作成
     conn = sqlite3.connect(str(DB_PATH))
     conn.row_factory = sqlite3.Row        # 行データを辞書のように扱う
     return conn
@@ -33,7 +33,7 @@ def init_db():
     """
     conn = get_connection()
     with open("schema.sql", "r", encoding="utf-8") as f:
-        conn.executescript(f.read())    # SQL ファイルをまとめて実行する
+        conn.executescript(f.read())    # SQL ファイルをまとめて実行
     conn.commit()
     conn.close()
 
@@ -62,15 +62,14 @@ def insert_page(page: dict) -> int:
         page["url"],
         page["title"],
         page.get("description", ""),
-        page.get("keywords", ""),
-        page.get("full_text", ""),
+        page.get("full_text", ""),     # ← 修正済み：full_text が正しい位置へ
         page.get("author", ""),
         page.get("category", ""),
         page.get("word_count", 0),
         page.get("crawled_at", datetime.now().isoformat()),
     ))
 
-    page_id = cursor.lastrowid    # 登録された行の id を取得する
+    page_id = cursor.lastrowid
     conn.commit()
     conn.close()
     return page_id
@@ -83,7 +82,7 @@ def get_all_pages() -> list:
     cursor.execute("SELECT * FROM pages ORDER BY created_at DESC")
     rows = cursor.fetchall()
     conn.close()
-    return [dict(row) for row in rows]    # sqlite3.Row を辞書に変換して返す
+    return [dict(row) for row in rows]    # sqlite3.Row を辞書に変換
 
 
 def log_search(query: str, results_count: int, user_id: str = None) -> int:
@@ -92,4 +91,4 @@ def log_search(query: str, results_count: int, user_id: str = None) -> int:
     現在はスタブ（空の関数）として定義しています。
     Step7で実際の記録処理を実装してください。
     """
-    pass  # Step7で実装してください
+    pass  # Step7で実装
