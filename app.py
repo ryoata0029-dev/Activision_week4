@@ -32,7 +32,7 @@ pages = load_and_index()
 engine = get_engine()
 
 # ── ヘッダー ──────────────────────────────────────────────────
-st.title("🔍 Tech0 Search v1.0")
+st.title("🔍 Tech0 Search v2.0")
 st.caption("PROJECT ZERO — 社内ナレッジ検索エンジン【TF-IDFランキング搭載】")
 
 with st.sidebar:
